@@ -15,6 +15,8 @@
 namespace Core;
 
 
+use Dotenv\Dotenv;
+
 class Moggie
 {
     private string $framework = 'Moggie Framework';
@@ -40,6 +42,7 @@ class Moggie
     private function init(): void
     {
         $this->loadComposer();
+        $this->loadEnvironmentVariables();
         $this->loadConfig();
         $this->loadRoutes();
     }
@@ -63,11 +66,23 @@ class Moggie
     /**
      * @return void
      */
+    private function loadEnvironmentVariables(): void
+    {
+        try {
+            Dotenv::createImmutable(__DIR__ . '/..')->load();
+        } catch (\Throwable $th) {
+            trigger_error($th);
+            die();
+        }
+    }
+
+    /**
+     * Quickly use our environment variables
+     *
+     * @return void
+     */
     private function loadConfig(): void
     {
-        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-        $dotenv->load();
-
         $config = realpath(__DIR__ . '/config.php');
         if (!is_file($config)) {
             die("No se encontró el archivo config. El archivo es requerido para que {$this->framework} funcione");

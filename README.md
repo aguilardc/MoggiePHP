@@ -1,4 +1,3 @@
-
 <h1 align="center">Moggie PHP</h1>
 
 <p align="center">
@@ -8,7 +7,20 @@
 </p>
 
 ## About
+
 Moggie PHP is a lightweight, syntax elegant web micro-framework.
+
+## Requirements
+
+Flight requires PHP 8.1 or greater.
+
+## Installation
+
+1. Download the files.
+
+If you're using Composer, you can run the following command:
+
+## Routing
 
 ## Security Vulnerabilities
 
