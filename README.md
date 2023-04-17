@@ -12,7 +12,7 @@ Moggie PHP is a lightweight, syntax elegant web micro-framework.
 
 ## Requirements
 
-Flight requires PHP 8.1 or greater.
+Moggie PHP requires PHP 8.1 or greater.
 
 ## Installation
 
@@ -21,7 +21,7 @@ Flight requires PHP 8.1 or greater.
 If you're using [Composer](https://getcomposer.org/), you can run the following command:
 
 ```
-composer require aguilarn/moggie
+composer require aguilardc/moggie
 ```
 
 OR you can download them directly and extract them to your web directory.
