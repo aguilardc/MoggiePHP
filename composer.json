@@ -1,9 +1,13 @@
 {
-  "name": "nevison/moggie",
+  "name": "aguilardc/moggie",
+  "type": "library",
+  "description": "Moggie PHP Micro Framework. A php micro framework recommended to create bare bones API applications",
+  "keywords": ["framework"],
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "App\\": "src/",
-      "core\\": "core/"
+      "Core\\": "core/"
     }
   },
   "authors": [
@@ -13,6 +17,7 @@
     }
   ],
   "require": {
+    "php": ">=8.1",
     "vlucas/phpdotenv": "^5.5",
     "ext-pdo": "*"
   }

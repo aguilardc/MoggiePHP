@@ -1,6 +1,6 @@
 <?php
 
-use core\Route;
+use Core\Route;
 
 Route::get('/', function () {
     echo "hola desde el main GET";

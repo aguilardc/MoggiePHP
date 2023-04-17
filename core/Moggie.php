@@ -1,8 +1,7 @@
 <?php
 
-namespace core;
+namespace Core;
 
-use core\Route;
 
 class Moggie
 {

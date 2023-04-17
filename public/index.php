@@ -2,6 +2,6 @@
 
 require_once realpath(__DIR__ . '/../core/Moggie.php');
 
-use core\Moggie;
+use Core\Moggie;
 
 Moggie::run();

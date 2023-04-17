@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use core\DB\Database;
+use Core\DB\Database;
 
 class User extends Database
 {
