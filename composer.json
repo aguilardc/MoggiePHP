@@ -1,0 +1,19 @@
+{
+  "name": "nevison/moggie",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/",
+      "core\\": "core/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Nevison Aguilar",
+      "email": "aguilardc1105@gmail.com"
+    }
+  ],
+  "require": {
+    "vlucas/phpdotenv": "^5.5",
+    "ext-pdo": "*"
+  }
+}
