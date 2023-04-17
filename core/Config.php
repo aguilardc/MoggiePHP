@@ -1,4 +1,14 @@
 <?php
+# ============================================================================ #
+
+/**
+ *  M O G G I E: a PHP micro-framework.
+ *
+ * @copyright   Copyright (c) 2023, Nevison Aguilar <aguilardc1105@gmail.com>
+ * @license     http://opensource.org/licenses/mit-license.php The MIT License
+ *
+ */
+
 if (!defined('DISPLAY_ERRORS')) {
     define('DISPLAY_ERRORS', $_ENV['__DISPLAY_ERRORS__']);
 }

@@ -1,4 +1,13 @@
 <?php
+# ============================================================================ #
+
+/**
+ *  M O G G I E: a PHP micro-framework.
+ *
+ * @copyright   Copyright (c) 2023, Nevison Aguilar <aguilardc1105@gmail.com>
+ * @license     http://opensource.org/licenses/mit-license.php The MIT License
+ *
+ */
 
 namespace Core;
 
@@ -14,7 +23,6 @@ class Route
 
         $method = $_SERVER['REQUEST_METHOD'];
         foreach (self::$routes[$method] as $route => $callback) {
-
             if (str_contains($route, ':')) {
                 $route = preg_replace('#:[a-zA-Z0-9]+#', '([a-zA-Z0-9]+)', $route);
             }
@@ -38,6 +46,7 @@ class Route
                 }
                 header('Content-type', 'application/json');
                 echo (is_array($response) || is_object($response)) ? json_encode($response) : $response;
+
                 return;
             }
         }

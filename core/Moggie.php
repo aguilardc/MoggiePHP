@@ -5,8 +5,6 @@
 /**
  *  M O G G I E: a PHP micro-framework.
  *
- *  For more information: {@link aguilardc1105@gmail.com}
- *
  * @copyright   Copyright (c) 2023, Nevison Aguilar <aguilardc1105@gmail.com>
  * @license     http://opensource.org/licenses/mit-license.php The MIT License
  *
@@ -48,7 +46,12 @@ class Moggie
     }
 
     /**
-     * Initialize composer
+     * Initialize composer Auto Loader
+     *
+     * Composer provides a convenient, automatically generated class loader
+     * for our application. We just need to utilize it! We'll require it
+     * into the script here so that we do not have to worry about the
+     * loading of our classes 'manually'. Feels great to relax.
      *
      * @return void
      */
