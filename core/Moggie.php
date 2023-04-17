@@ -1,5 +1,17 @@
 <?php
 
+# ============================================================================ #
+
+/**
+ *  M O G G I E: a PHP micro-framework.
+ *
+ *  For more information: {@link aguilardc1105@gmail.com}
+ *
+ * @copyright   Copyright (c) 2023, Nevison Aguilar <aguilardc1105@gmail.com>
+ * @license     http://opensource.org/licenses/mit-license.php The MIT License
+ *
+ */
+
 namespace Core;
 
 
@@ -34,6 +46,7 @@ class Moggie
 
     /**
      * Initialize composer
+     *
      * @return void
      */
     private function loadComposer(): void
@@ -60,8 +73,33 @@ class Moggie
             die("No se encontró el archivo config. El archivo es requerido para que {$this->framework} funcione");
         }
         require_once $config;
+
+        $this->validPHPVersion();
+        $this->displayErrors();
     }
 
+    /**
+     * @return void
+     */
+    private function validPHPVersion(): void
+    {
+        if (PHP_VERSION < PHP_REQUIRED) {
+            die('PHP Version not Supported');
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function displayErrors(): void
+    {
+        ini_set('display_errors', DISPLAY_ERRORS);
+    }
+
+
+    /**
+     * @return void
+     */
     private function loadRoutes(): void
     {
         $routes = realpath(__DIR__ . '/../src/routes/web.php');

@@ -1,24 +1,33 @@
 {
-  "name": "aguilardc/moggie",
-  "type": "library",
-  "description": "Moggie PHP Micro Framework. A php micro framework recommended to create bare bones API applications",
-  "keywords": ["framework"],
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/",
-      "Core\\": "core/"
+  "name" : "aguilardc/moggie",
+  "type" : "library",
+  "description" : "Moggie PHP Micro Framework. A php micro framework recommended to create bare bones API applications",
+  "keywords" : [
+    "framework",
+    "microframework",
+    "mvc",
+    "lightweight",
+    "controllers",
+    "models",
+    "views"
+  ],
+  "license" : "MIT",
+  "autoload" : {
+    "psr-4" : {
+      "App\\" : "src/",
+      "Core\\" : "core/"
     }
   },
-  "authors": [
+  "authors" : [
     {
-      "name": "Nevison Aguilar",
-      "email": "aguilardc1105@gmail.com"
+      "name" : "Nevison Aguilar",
+      "email" : "aguilardc1105@gmail.com",
+      "homepage": "https://github.com/aguilardc/"
     }
   ],
-  "require": {
-    "php": ">=8.1",
-    "vlucas/phpdotenv": "^5.5",
-    "ext-pdo": "*"
+  "require" : {
+    "php" : ">=8.1",
+    "vlucas/phpdotenv" : "^5.5",
+    "ext-pdo" : "*"
   }
 }
