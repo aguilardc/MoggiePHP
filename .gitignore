@@ -302,4 +302,4 @@ GitHub.sublime-settings
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,phpstorm+all,intellij+all,netbeans,sublimetext,aptanastudio,yarn,composer,sass
 
-!/.env
+/.env
