@@ -13,16 +13,21 @@ namespace Core;
 
 class Route
 {
+    private const GET = 'GET';
+    private const POST = 'POST';
+    private const PUT = 'PUT';
+    private const DELETE = 'DELETE';
 
     private static array $routes = [];
 
+    /**
+     * @return void
+     */
     public static function run(): void
     {
-        $uri = $_SERVER['REQUEST_URI'];
-        $uri = trim($uri, '/');
+        $uri = trim($_SERVER['REQUEST_URI'], '/');
 
-        $method = $_SERVER['REQUEST_METHOD'];
-        foreach (self::$routes[$method] as $route => $callback) {
+        foreach (self::$routes[$_SERVER['REQUEST_METHOD']] as $route => $callback) {
             if (str_contains($route, ':')) {
                 $route = preg_replace('#:[a-zA-Z0-9]+#', '([a-zA-Z0-9]+)', $route);
             }
@@ -53,27 +58,55 @@ class Route
         echo json_encode(['code' => 404, 'path' => $_SERVER['REQUEST_URI'], 'message' => 'Resource Not found']);
     }
 
+    /**
+     * @param $uri
+     * @param $callback
+     * @param string $method
+     * @return void
+     */
+    private function add($uri, $callback, string $method): void
+    {
+        $uri = trim($uri, '/');
+        self::$routes[$method][$uri] = $callback;
+    }
+
+    /**
+     * @param $uri
+     * @param $callback
+     * @return void
+     */
     public static function get($uri, $callback): void
     {
-        $uri = trim($uri, '/');
-        self::$routes['GET'][$uri] = $callback;
+        (new self())->add($uri, $callback, self::GET);
     }
 
+    /**
+     * @param $uri
+     * @param $callback
+     * @return void
+     */
     public static function post($uri, $callback): void
     {
-        $uri = trim($uri, '/');
-        self::$routes['POST'][$uri] = $callback;
+        (new self())->add($uri, $callback, self::POST);
     }
 
+    /**
+     * @param $uri
+     * @param $callback
+     * @return void
+     */
     public static function put($uri, $callback): void
     {
-        $uri = trim($uri, '/');
-        self::$routes['PUT'][$uri] = $callback;
+        (new self())->add($uri, $callback, self::PUT);
     }
 
+    /**
+     * @param $uri
+     * @param $callback
+     * @return void
+     */
     public static function delete($uri, $callback): void
     {
-        $uri = trim($uri, '/');
-        self::$routes['DELETE'][$uri] = $callback;
+        (new self())->add($uri, $callback, self::DELETE);
     }
 }
