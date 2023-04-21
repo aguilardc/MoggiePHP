@@ -14,6 +14,9 @@ namespace Core;
 
 
 use Dotenv\Dotenv;
+use Exception;
+use Symfony\Component\Finder\Finder;
+use Core\Env;
 
 class Moggie
 {
@@ -72,7 +75,7 @@ class Moggie
     private function loadEnvironmentVariables(): void
     {
         try {
-            Dotenv::createImmutable(__DIR__ . '/..')->load();
+            Env::create(__DIR__ . '/..');
         } catch (\Throwable $th) {
             trigger_error($th);
             die();
@@ -83,26 +86,48 @@ class Moggie
      * Quickly use our environment variables
      *
      * @return void
+     * @throws Exception
      */
     private function loadConfig(): void
     {
-        $config = realpath(__DIR__ . '/config.php');
-        if (!is_file($config)) {
-            die("No se encontró el archivo config. El archivo es requerido para que {$this->framework} funcione");
+        $files = $this->getFiles();
+
+        if (!is_file($files['app'])) {
+            throw new Exception('Unable to load the "app" configuration file.');
         }
-        require_once $config;
+
+        foreach ($files as $path) {
+            require $path;
+        }
 
         $this->validPHPVersion();
         $this->displayErrors();
     }
 
     /**
+     * Dynamic find and return of configuration files.
+     *
+     * @return array
+     */
+    private function getFiles(): array
+    {
+        $files = [];
+        $configPath = realpath(__DIR__ . '/Config');
+        foreach (Finder::create()->files()->name('*.php')->in($configPath)->files() as $file) {
+            $files[basename($file->getRealPath(), '.php')] = $file->getRealPath();
+        }
+
+        return array_reverse($files);
+    }
+
+    /**
      * @return void
+     * @throws Exception
      */
     private function validPHPVersion(): void
     {
-        if (PHP_VERSION < PHP_REQUIRED) {
-            die('PHP Version not Supported');
+        if (env('PHP_VERSION') < env('PHP_REQUIRED')) {
+            throw new Exception('PHP Version not Supported');
         }
     }
 
@@ -111,7 +136,7 @@ class Moggie
      */
     private function displayErrors(): void
     {
-        ini_set('display_errors', DISPLAY_ERRORS);
+        ini_set('display_errors', env('DISPLAY_ERRORS'));
     }
 
 

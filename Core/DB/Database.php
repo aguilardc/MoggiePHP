@@ -16,16 +16,22 @@ use PDO;
 
 class Database
 {
-    private string $db_engine = DB_ENGINE;
-    private string $db_host = DB_HOST;
-    private string $db_name = DB_NAME;
-    private string $db_user = DB_USER;
-    private string $db_password = DB_PASSWORD;
-    private string $db_charset = DB_CHARSET;
+    private string $db_engine;
+    private string $db_host;
+    private string $db_name;
+    private string $db_user;
+    private string $db_password;
+    private string $db_charset;
     private static ?Database $instance = null;
 
     private function __construct()
     {
+        $this->db_engine = env('DB_ENGINE') ?? '';
+        $this->db_host = env('DB_HOST') ?? '';
+        $this->db_name = env('DB_NAME') ?? '';
+        $this->db_user = env('DB_USER') ?? '';
+        $this->db_password = env('DB_PASSWORD') ?? '';
+        $this->db_charset = env('DB_CHARSET') ?? '';
     }
 
     /**
@@ -50,8 +56,8 @@ class Database
                 "{$this->db_engine}:dbname={$this->db_name};host={$this->db_host}",
                 $this->db_user,
                 $this->db_password, [
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '{$this->db_charset}'"
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '{$this->db_charset}'"
             ]);
         } catch (\PDOException $e) {
             die($e->getMessage());

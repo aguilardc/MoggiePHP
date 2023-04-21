@@ -26,9 +26,7 @@ class UsersController implements crud
     public function read()
     {
         $users = new User();
-        $data = $users->find();
-        header('Content/type', 'application/json');
-        echo json_encode($data);
+        return $users->find();
     }
 
     /**
