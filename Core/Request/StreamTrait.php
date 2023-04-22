@@ -10,11 +10,16 @@
  *
  */
 
-namespace Core;
+namespace Core\Request;
 
-use App\interface\crud;
-use Core\Request\Request as RequestBase;
-
-class Request extends RequestBase
+trait StreamTrait
 {
+    public function __toString(): string
+    {
+        if ($this->isSeekable()) {
+            $this->seek(0);
+        }
+
+        return $this->getContents();
+    }
 }

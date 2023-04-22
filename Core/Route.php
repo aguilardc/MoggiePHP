@@ -25,7 +25,13 @@ class Route
      */
     public static function run(): void
     {
-        $uri = trim($_SERVER['REQUEST_URI'], '/');
+
+        $uri = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+        $uri .= "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $request = new Request($_SERVER['REQUEST_METHOD'], $uri);
+        print_r($request);
+        die();
+
 
         foreach (self::$routes[$_SERVER['REQUEST_METHOD']] as $route => $callback) {
             if (str_contains($route, ':')) {
