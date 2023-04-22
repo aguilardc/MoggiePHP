@@ -28,7 +28,7 @@ class Route
 
         $uri = empty($_SERVER['HTTPS']) ? 'http' : 'https';
         $uri .= "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $request = new Request($_SERVER['REQUEST_METHOD'], $uri);
+        $request = new Request($uri);
         print_r($request);
         die();
 

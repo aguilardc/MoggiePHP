@@ -20,19 +20,19 @@ class Request implements RequestInterface
     use MessageTrait;
 
     /**
-     * @param string $method HTTP Method
      * @param string|UriInterface $uri URI
+     * @param string $method HTTP Method
      * @param array $headers Request headers
      * @param string|StreamInterface|null $body Request body
      * @param string $version Protocol version
      */
-    public function __construct(string $method, UriInterface|string $uri, array $headers = [], StreamInterface|string $body = null, string $version = '1.1')
+    public function __construct(UriInterface|string $uri, string $method = '', array $headers = [], StreamInterface|string $body = null, string $version = '1.1')
     {
         if (!($uri instanceof UriInterface)) {
             $uri = new Uri($uri);
         }
 
-        $this->method = $method;
+        $this->method = $method ?? $_SERVER['REQUEST_METHOD'];
         $this->uri = $uri;
         $this->setHeaders($headers);
         $this->protocol = $version;
