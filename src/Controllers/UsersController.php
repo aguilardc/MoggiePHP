@@ -18,6 +18,7 @@ class UsersController implements crud
     public function create(Request $request): string
     {
         // @TODO: create a resource
+        return 'create a user';
     }
 
     /**
@@ -48,21 +49,23 @@ class UsersController implements crud
      * update a resource
      *
      * @param Request $request
-     * @return array
+     * @return string
      */
-    public function update(Request $request): array
+    public function update(Request $request): string
     {
         // @TODO: update a resource
+        return 'update user';
     }
 
     /**
      * delete a resource
      *
      * @param Request $request
-     * @return array
+     * @return string
      */
-    public function delete(Request $request): array
+    public function delete(Request $request): string
     {
         // @TODO: delete a resource
+        return 'delete user';
     }
 }
