@@ -11,6 +11,8 @@
 
 namespace Core;
 
+use Core\Request\Parameters;
+
 class Route
 {
     private const GET = 'GET';
@@ -21,47 +23,48 @@ class Route
     private static array $routes = [];
 
     /**
+     * @param Request $request
      * @return void
      */
-    public static function run(): void
+    public static function run(Request $request): void
     {
-
-        $uri = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-        $uri .= "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $request = new Request($uri);
-        print_r($request);
-        die();
-
-
-        foreach (self::$routes[$_SERVER['REQUEST_METHOD']] as $route => $callback) {
-            if (str_contains($route, ':')) {
-                $route = preg_replace('#:[a-zA-Z0-9]+#', '([a-zA-Z0-9]+)', $route);
+        $data = empty($_POST) ? json_decode(file_get_contents('php://input'), true) : $_POST;
+        foreach (self::$routes[$request->getMethod()] as $route => $callback) {
+            $uri = explode('/', $route);
+            $idParams = [];
+            foreach ($uri as $url) {
+                if (stripos(strtolower($url), ':') !== false) {
+                    $idParams[] = ltrim($url, ':');
+                }
             }
-
-            if (preg_match("#^$route$#", $uri, $matches)) {
+            if (str_contains($route, ':')) {
+                $route = preg_replace('/:[a-zA-Z0-9]+/i', '([a-zA-Z0-9]+)', $route);
+            }
+            if (preg_match("#^$route$#i", $request->getUri()->getPath(), $matches)) {
                 $params = array_slice($matches, 1);
-
+                foreach ($params as $key => $param) {
+                    $data[$idParams[$key]] = $param;
+                }
+                $request->setParameters(new Parameters($data));
                 if (is_callable($callback)) {
                     $response = $callback(...$params);
                 }
-
                 if (is_string($callback)) {
                     $router = explode('@', $callback);
                     $class = "\\App\\Controllers\\$router[0]";
                     if (class_exists($class)) {
                         $controller = new $class();
                         if (method_exists($class, $router[1])) {
-                            $response = $controller->{$router[1]}(...$params);
+                            $response = $controller->{$router[1]}($request);
                         }
                     }
                 }
                 header('Content-type', 'application/json');
                 echo (is_array($response) || is_object($response)) ? json_encode($response) : $response;
-
                 return;
             }
         }
-        echo json_encode(['code' => 404, 'path' => $_SERVER['REQUEST_URI'], 'message' => 'Resource Not found']);
+        echo json_encode(['code' => 404, 'path' => $request->getUri()->getPath(), 'message' => 'Resource Not found']);
     }
 
     /**
@@ -70,10 +73,9 @@ class Route
      * @param string $method
      * @return void
      */
-    private function add($uri, $callback, string $method): void
+    private static function add($uri, $callback, string $method): void
     {
-        $uri = trim($uri, '/');
-        self::$routes[$method][$uri] = $callback;
+        self::$routes[$method][rtrim($uri, '/')] = $callback;
     }
 
     /**
@@ -83,7 +85,7 @@ class Route
      */
     public static function get($uri, $callback): void
     {
-        (new self())->add($uri, $callback, self::GET);
+        self::add($uri, $callback, self::GET);
     }
 
     /**
@@ -93,7 +95,7 @@ class Route
      */
     public static function post($uri, $callback): void
     {
-        (new self())->add($uri, $callback, self::POST);
+        self::add($uri, $callback, self::POST);
     }
 
     /**
@@ -103,7 +105,7 @@ class Route
      */
     public static function put($uri, $callback): void
     {
-        (new self())->add($uri, $callback, self::PUT);
+        self::add($uri, $callback, self::PUT);
     }
 
     /**
@@ -113,6 +115,6 @@ class Route
      */
     public static function delete($uri, $callback): void
     {
-        (new self())->add($uri, $callback, self::DELETE);
+        self::add($uri, $callback, self::DELETE);
     }
 }

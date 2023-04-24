@@ -142,14 +142,18 @@ class Moggie
 
     /**
      * @return void
+     * @throws Exception
      */
     private function loadRoutes(): void
     {
         $routes = realpath(__DIR__ . '/../src/routes/web.php');
         if (!is_file($routes)) {
-            die("No se encontró el archivo config. El archivo es requerido para que {$this->framework} funcione");
+            throw new Exception('Unable to load the "config" file.');
         }
+
+        $uri = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+        $uri .= "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         require_once $routes;
-        Route::run();
+        Route::run(new Request($uri));
     }
 }

@@ -19,4 +19,10 @@ class User extends Database
         $conn = $this->database->connection();
         return $conn->query('SELECT * FROM users')->fetchAll();
     }
+
+    public function findOne($id): array
+    {
+        $conn = $this->database->connection();
+        return $conn->query("SELECT * FROM users where id = {$id}")->fetch();
+    }
 }

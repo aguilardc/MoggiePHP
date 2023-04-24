@@ -5,25 +5,28 @@ namespace App\Controllers;
 
 use App\interface\crud;
 use App\Models\User;
+use Core\Request\Request;
 
 class UsersController implements crud
 {
     /**
      * create a resource
      *
-     * @return mixed
+     * @param Request $request
+     * @return string
      */
-    public function create()
+    public function create(Request $request): string
     {
-        // TODO: Implement create() method.
+        // @TODO: create a resource
     }
 
     /**
      * read a resource
      *
-     * @return mixed
+     * @param Request $request
+     * @return array
      */
-    public function read()
+    public function read(Request $request): array
     {
         $users = new User();
         return $users->find();
@@ -32,55 +35,34 @@ class UsersController implements crud
     /**
      * read one resource by id
      *
-     * @return mixed
+     * @param Request $request
+     * @return array
      */
-    public function readById($id): string
+    public function readById(Request $request): array
     {
-        return "SELECT * FROM users WHERE id = {$id}";
+        $users = new User();
+        return $users->findOne($request->get('id'));
     }
 
     /**
      * update a resource
      *
-     * @return mixed
+     * @param Request $request
+     * @return array
      */
-    public function update()
+    public function update(Request $request): array
     {
-        // TODO: Implement update() method.
+        // @TODO: update a resource
     }
 
     /**
      * delete a resource
      *
-     * @return mixed
+     * @param Request $request
+     * @return array
      */
-    public function delete()
+    public function delete(Request $request): array
     {
-        // TODO: Implement delete() method.
+        // @TODO: delete a resource
     }
-//    public function create(): void
-//    {
-//        echo json_encode(['message' => 'hola mundo', 'method' => 'POST']);
-//    }
-//
-//    public function read(): void
-//    {
-//        echo json_encode(['message' => 'hola mundo', 'method' => 'GET']);
-//    }
-//
-//    public function readById($id): string
-//    {
-//        $query = "SELECT * FROM users WHERE id = {$id}";
-//        return $query;
-//    }
-//
-//    public function update(): void
-//    {
-//        echo json_encode(['message' => 'hola mundo', 'method' => 'PUT']);
-//    }
-//
-//    public function delete(): void
-//    {
-//        echo json_encode(['message' => 'hola mundo', 'method' => 'DELETE']);
-//    }
 }
