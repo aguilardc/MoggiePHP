@@ -24,6 +24,9 @@ class Moggie
     private string $version = '1.0.0';
     private string $lng = 'es';
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
         $this->init();
@@ -39,6 +42,7 @@ class Moggie
 
     /**
      * @return void
+     * @throws Exception
      */
     private function init(): void
     {

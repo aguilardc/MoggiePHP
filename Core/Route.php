@@ -75,7 +75,10 @@ class Route
      */
     private static function add($uri, $callback, string $method): void
     {
-        self::$routes[$method][rtrim($uri, '/')] = $callback;
+        if (strlen($uri) > 1) {
+            $uri = rtrim($uri, '/');
+        }
+        self::$routes[$method][$uri] = $callback;
     }
 
     /**
