@@ -2,6 +2,9 @@
 
 namespace Moggie\Middleware;
 
+use Moggie\Http\Request;
+use Moggie\Http\Response;
+
 /**
  * Class HandleCors
  *
@@ -23,7 +26,7 @@ class HandleCors
         ], $config);
     }
 
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         if ($this->isPreflightRequest($request)) {
             return $this->handlePreflightRequest($request);

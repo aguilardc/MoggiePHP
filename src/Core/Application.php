@@ -2,6 +2,7 @@
 
 namespace Moggie\Core;
 
+use Moggie\Config\Repository;
 use Moggie\Container\Container;
 use Moggie\Http\Request;
 use Moggie\Http\Response;
@@ -42,7 +43,7 @@ class Application extends Container
     protected function registerCoreServices(): void
     {
         $this->singleton('config', function () {
-            $config = new ConfigRepository();
+            $config = new Repository();
             $this->loadConfiguration($config);
             return $config;
         });
@@ -54,7 +55,7 @@ class Application extends Container
         $this->bind('request', fn() => Request::capture());
     }
 
-    protected function loadConfiguration(ConfigRepository $config): void
+    protected function loadConfiguration(Repository $config): void
     {
         $configPath = $this->configPath();
         if (!is_dir($configPath)) {

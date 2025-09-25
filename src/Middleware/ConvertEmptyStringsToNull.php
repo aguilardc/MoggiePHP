@@ -2,6 +2,9 @@
 
 namespace Moggie\Middleware;
 
+use Moggie\Http\Request;
+use Moggie\Http\Response;
+
 /**
  * Class ConvertEmptyStringsToNull
  *
@@ -9,7 +12,7 @@ namespace Moggie\Middleware;
  */
 class ConvertEmptyStringsToNull
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         $this->convertInput($request);
 
@@ -28,7 +31,7 @@ class ConvertEmptyStringsToNull
         $result = [];
 
         foreach ($data as $key => $value) {
-            if (is_string($value) && $value === '') {
+            if ($value === '') {
                 $result[$key] = null;
             } elseif (is_array($value)) {
                 $result[$key] = $this->convertArray($value);

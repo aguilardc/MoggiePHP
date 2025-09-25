@@ -2,6 +2,9 @@
 
 namespace Moggie\Middleware;
 
+use Moggie\Http\Request;
+use Moggie\Http\Response;
+
 /**
  * Class TrimStrings
  *
@@ -16,7 +19,7 @@ class TrimStrings
         'new_password',
     ];
 
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         $this->trimInput($request);
 

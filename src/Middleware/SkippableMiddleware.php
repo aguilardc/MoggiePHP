@@ -2,6 +2,9 @@
 
 namespace Moggie\Middleware;
 
+use Moggie\Http\Request;
+use Moggie\Http\Response;
+
 /**
  * Class SkippableMiddleware
  *
@@ -18,7 +21,7 @@ class SkippableMiddleware
         $this->skippedMiddleware = $skippedMiddleware;
     }
 
-    public function handle(Request $request, Closure $destination, array $middleware = []): Response
+    public function handle(Request $request, \Closure $destination, array $middleware = []): Response
     {
         $middleware = array_diff($middleware, $this->skippedMiddleware);
         $globalMiddleware = array_diff($this->stack->getGlobalMiddleware(), $this->skippedMiddleware);

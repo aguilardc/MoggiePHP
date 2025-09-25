@@ -2,6 +2,13 @@
 
 namespace Moggie\Middleware;
 
+use Moggie\Container\Container;
+use Moggie\Container\Exceptions\BindingResolutionException;
+use Moggie\Container\Exceptions\EntryNotFoundException;
+use Moggie\Http\Request;
+use Moggie\Http\Response;
+use ReflectionException;
+
 class MiddlewareStack
 {
     protected Container $container;
@@ -59,7 +66,7 @@ class MiddlewareStack
         $this->middlewareGroups[$group][] = $middleware;
     }
 
-    public function handle(Request $request, Closure $destination, array $middleware = []): Response
+    public function handle(Request $request, \Closure $destination, array $middleware = []): Response
     {
         $pipeline = $this->buildPipeline($middleware);
 
@@ -106,7 +113,7 @@ class MiddlewareStack
         return $middleware;
     }
 
-    protected function sendThroughPipeline(Request $request, Closure $destination, array $pipeline): Response
+    protected function sendThroughPipeline(Request $request, \Closure $destination, array $pipeline): Response
     {
         return array_reduce($pipeline, function ($carry, $middleware) {
             return function ($request) use ($carry, $middleware) {
@@ -115,7 +122,7 @@ class MiddlewareStack
         }, $destination)($request);
     }
 
-    protected function executeMiddleware(string $middleware, Request $request, Closure $next): Response
+    protected function executeMiddleware(string $middleware, Request $request, \Closure $next): Response
     {
         [$name, $parameters] = $this->parseMiddleware($middleware);
 
@@ -139,6 +146,11 @@ class MiddlewareStack
         return [$name, $parameters];
     }
 
+    /**
+     * @throws BindingResolutionException
+     * @throws ReflectionException
+     * @throws EntryNotFoundException
+     */
     protected function resolveMiddleware(string $middleware)
     {
         if (class_exists($middleware)) {

@@ -3,6 +3,8 @@
 namespace Moggie\Middleware;
 
 use Moggie\Http\Exceptions\UnauthorizedHttpException;
+use Moggie\Http\Request;
+use Moggie\Http\Response;
 
 /**
  * Class Authenticate
@@ -11,7 +13,7 @@ use Moggie\Http\Exceptions\UnauthorizedHttpException;
  */
 class Authenticate
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         if (!$this->isAuthenticated($request)) {
             throw new UnauthorizedHttpException('Authentication required');

@@ -3,6 +3,8 @@
 namespace Moggie\Middleware;
 
 use Moggie\Http\Exceptions\HttpException;
+use Moggie\Http\Request;
+use Moggie\Http\Response;
 
 /**
  * Class ValidatePostSize
@@ -11,7 +13,7 @@ use Moggie\Http\Exceptions\HttpException;
  */
 class ValidatePostSize
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         $maxSize = $this->getPostMaxSize();
 
