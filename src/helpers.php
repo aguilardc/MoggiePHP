@@ -45,7 +45,7 @@ if (!function_exists('container')) {
     }
 }
 
-/ =============================================================================
+// =============================================================================
 // CONFIGURATION HELPERS
 // =============================================================================
 
@@ -299,7 +299,7 @@ if (!function_exists('throw_unless')) {
     }
 }
 
-/ =============================================================================
+// =============================================================================
 // VALIDATION HELPERS
 // =============================================================================
 
@@ -492,6 +492,7 @@ if (!function_exists('hash_check')) {
 if (!function_exists('now')) {
     /**
      * Get current datetime
+     * @throws Exception
      */
     function now(?string $timezone = null): DateTimeImmutable
     {
@@ -502,6 +503,7 @@ if (!function_exists('now')) {
 if (!function_exists('today')) {
     /**
      * Get today's date
+     * @throws Exception
      */
     function today(?string $timezone = null): DateTimeImmutable
     {
@@ -512,6 +514,7 @@ if (!function_exists('today')) {
 if (!function_exists('carbon')) {
     /**
      * Create a Carbon instance (if Carbon is available)
+     * @throws Exception
      */
     function carbon($time = null, $timezone = null)
     {

@@ -6,7 +6,7 @@ namespace Moggie\Routing;
 
 use Closure;
 
-class Route
+class Route extends \Moggie\Http\Request
 {
     protected array $methods;
     protected string $uri;

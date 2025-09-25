@@ -4,9 +4,13 @@ namespace Moggie\Container;
 
 use Closure;
 use Exception;
+use InvalidArgumentException;
+use LogicException;
 use Moggie\Container\Exceptions\BindingResolutionException;
 use Moggie\Container\Exceptions\EntryNotFoundException;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
+use ReflectionException;
 use ReflectionParameter;
 
 class Container implements ContainerInterface
@@ -21,9 +25,9 @@ class Container implements ContainerInterface
     private array $resolved = [];
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\EntryNotFoundException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws EntryNotFoundException
+     * @throws BindingResolutionException
      */
     public function get(string $id)
     {
@@ -97,6 +101,10 @@ class Container implements ContainerInterface
         $this->bind($abstract, $concrete, true);
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws BindingResolutionException
+     */
     public function instance(string $abstract, $instance): void
     {
         $this->removeAbstractAlias($abstract);
@@ -141,8 +149,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     public function make(string $abstract, array $parameters = [])
     {
@@ -150,8 +158,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     protected function resolve(string $abstract, array $parameters = [], bool $raiseEvents = true)
     {
@@ -196,7 +204,7 @@ class Container implements ContainerInterface
 
     /**
      * @throws BindingResolutionException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function build($concrete)
     {
@@ -233,8 +241,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     protected function resolveDependencies(array $dependencies): array
     {
@@ -275,7 +283,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function resolvePrimitive(ReflectionParameter $parameter)
     {
@@ -295,8 +303,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     protected function resolveClass(ReflectionParameter $parameter): ?array
     {
@@ -318,8 +326,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     protected function resolveVariadicClass(ReflectionParameter $parameter): array
     {
@@ -356,7 +364,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function notInstantiable(string $concrete)
     {
@@ -372,7 +380,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function unresolvablePrimitive(ReflectionParameter $parameter): void
     {
@@ -439,7 +447,7 @@ class Container implements ContainerInterface
         }
     }
 
-    public function tagged(string $tag): iterable
+    public function tagged(string $tag): array|RewindableGenerator
     {
         if (!isset($this->tags[$tag])) {
             return [];
@@ -458,8 +466,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
-     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     protected function rebound(string $abstract): void
     {
@@ -487,6 +495,9 @@ class Container implements ContainerInterface
         return BoundMethod::call($this, $callback, $parameters, $defaultMethod);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function methodParameterTypes(callable $callback): array
     {
         $dependencies = [];
@@ -499,7 +510,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function getCallReflector($callback): \ReflectionFunctionAbstract
     {
@@ -543,7 +554,11 @@ class Container implements ContainerInterface
         return $this->bound($key);
     }
 
-    public function offsetGet($key)
+    /**
+     * @throws ReflectionException
+     * @throws BindingResolutionException
+     */
+    public function offsetGet($key): null
     {
         return $this->make($key);
     }
