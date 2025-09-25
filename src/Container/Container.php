@@ -6,9 +6,7 @@ use Closure;
 use Exception;
 use Moggie\Container\Exceptions\BindingResolutionException;
 use Moggie\Container\Exceptions\EntryNotFoundException;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionParameter;
 
 class Container implements ContainerInterface
@@ -20,7 +18,13 @@ class Container implements ContainerInterface
     protected array $tags = [];
     protected array $buildStack = [];
     protected array $with = [];
+    private array $resolved = [];
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Moggie\Container\Exceptions\EntryNotFoundException
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     public function get(string $id)
     {
         try {
@@ -42,7 +46,7 @@ class Container implements ContainerInterface
     {
         return isset($this->bindings[$abstract]) ||
             isset($this->instances[$abstract]) ||
-            $this->isAlias[$abstract];
+            $this->isAlias($abstract);
     }
 
     public function resolved(string $abstract): bool
@@ -136,11 +140,19 @@ class Container implements ContainerInterface
         $this->abstractAliases = [];
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     public function make(string $abstract, array $parameters = [])
     {
         return $this->resolve($abstract, $parameters);
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     protected function resolve(string $abstract, array $parameters = [], bool $raiseEvents = true)
     {
         $abstract = $this->getAlias($abstract);
@@ -184,6 +196,7 @@ class Container implements ContainerInterface
 
     /**
      * @throws BindingResolutionException
+     * @throws \ReflectionException
      */
     public function build($concrete)
     {
@@ -191,11 +204,7 @@ class Container implements ContainerInterface
             return $concrete($this, $this->getLastParameterOverride());
         }
 
-        try {
-            $reflector = new \ReflectionClass($concrete);
-        } catch (\ReflectionException $e) {
-            throw new BindingResolutionException("Target class [$concrete] does not exist.", 0, $e);
-        }
+        $reflector = new ReflectionClass($concrete);
 
         if (!$reflector->isInstantiable()) {
             return $this->notInstantiable($concrete);
@@ -223,6 +232,10 @@ class Container implements ContainerInterface
         return $reflector->newInstanceArgs($instances);
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     protected function resolveDependencies(array $dependencies): array
     {
         $results = [];
@@ -261,6 +274,9 @@ class Container implements ContainerInterface
         return count($this->with) ? end($this->with) : [];
     }
 
+    /**
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     protected function resolvePrimitive(ReflectionParameter $parameter)
     {
         if (($context = $this->getContextualConcrete('$' . $parameter->getName())) !== null) {
@@ -301,6 +317,10 @@ class Container implements ContainerInterface
         }
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     protected function resolveVariadicClass(ReflectionParameter $parameter): array
     {
         $className = $parameter->getClass()->name;
@@ -437,13 +457,10 @@ class Container implements ContainerInterface
         return $this->bindings;
     }
 
-    public function getAlias(string $abstract): string
-    {
-        return isset($this->aliases[$abstract])
-            ? $this->getAlias($this->aliases[$abstract])
-            : $abstract;
-    }
-
+    /**
+     * @throws \ReflectionException
+     * @throws \Moggie\Container\Exceptions\BindingResolutionException
+     */
     protected function rebound(string $abstract): void
     {
         $instance = $this->make($abstract);
@@ -481,6 +498,9 @@ class Container implements ContainerInterface
         return $dependencies;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     protected function getCallReflector($callback): \ReflectionFunctionAbstract
     {
         if (is_string($callback) && str_contains($callback, '::')) {
@@ -538,7 +558,7 @@ class Container implements ContainerInterface
         unset($this->bindings[$key], $this->instances[$key], $this->resolved[$key]);
     }
 }
-}
+
 
 
 
