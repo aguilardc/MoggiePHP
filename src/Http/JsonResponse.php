@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Moggie\Http;
 
+use InvalidArgumentException;
+
 class JsonResponse extends Response
 {
     protected array $data;
@@ -25,7 +27,7 @@ class JsonResponse extends Response
         $this->setData($data);
     }
 
-    public static function make(array $data = [], int $status = 200, array $headers = [], int $options = 0): self
+    public static function make(array|string $data = [], int $status = 200, array $headers = [], int $options = 0): self
     {
         return new static($data, $status, $headers, $options);
     }
@@ -67,7 +69,7 @@ class JsonResponse extends Response
         $json = json_encode($data, $this->encodingOptions);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new JsonException(json_last_error_msg(), json_last_error());
+            throw new \JsonException(json_last_error_msg(), json_last_error());
         }
 
         return $json;
@@ -187,7 +189,7 @@ class JsonResponse extends Response
         return $this->resource($items, $meta);
     }
 
-    public function created(array $data = [], string $message = 'Resource created successfully'): self
+    public function created(array $data = [], string|array $message = 'Resource created successfully'): self
     {
         $this->setStatusCode(static::HTTP_CREATED);
 
@@ -215,7 +217,7 @@ class JsonResponse extends Response
         ]);
     }
 
-    public function noContent(): self
+    public function noContent(array $headers = []): self
     {
         $this->setStatusCode(static::HTTP_NO_CONTENT);
         $this->setData([]);
@@ -229,14 +231,14 @@ class JsonResponse extends Response
         return $this->error($message, [], static::HTTP_NOT_FOUND);
     }
 
-    public function unauthorized(string $message = 'Unauthorized'): self
+    public function unauthorized(string $message = 'Unauthorized', array $headers = []): self
     {
         $this->setStatusCode(static::HTTP_UNAUTHORIZED);
 
         return $this->error($message, [], static::HTTP_UNAUTHORIZED);
     }
 
-    public function forbidden(string $message = 'Forbidden'): self
+    public function forbidden(string $message = 'Forbidden', array $headers = []): self
     {
         $this->setStatusCode(static::HTTP_FORBIDDEN);
 
